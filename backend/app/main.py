@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.db.session import engine, Base
-from app.api import movie_api, genre_api, health_api
+from app.api import movie_api, genre_api, health_api, ai_api
 
 # Create database tables
 Base.metadata.create_all(bind=engine)
@@ -27,6 +27,7 @@ app.add_middleware(
 app.include_router(movie_api.router, prefix=settings.API_V1_PREFIX)
 app.include_router(genre_api.router, prefix=settings.API_V1_PREFIX)
 app.include_router(health_api.router, prefix=settings.API_V1_PREFIX)
+app.include_router(ai_api.router, prefix=settings.API_V1_PREFIX)
 
 
 @app.get("/")

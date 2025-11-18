@@ -14,8 +14,9 @@ python-dotenv==1.0.1
 pydantic-settings==2.6.1
 
 # AI/ML (Phase 3)
-# sentence-transformers==2.2.2
-# chromadb==0.4.22
+sentence-transformers==3.3.1
+ollama==0.4.4
+# Note: Using custom vector storage instead of ChromaDB due to compilation issues on Windows
 
 # Development
 pytest==7.4.3
