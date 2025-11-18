@@ -1,0 +1,22 @@
+# Web Framework
+fastapi==0.115.0
+uvicorn[standard]==0.32.0
+python-multipart==0.0.9
+
+# Database
+sqlalchemy==2.0.35
+
+# HTTP Client
+requests==2.32.3
+
+# Environment Variables
+python-dotenv==1.0.1
+pydantic-settings==2.6.1
+
+# AI/ML (Phase 3)
+# sentence-transformers==2.2.2
+# chromadb==0.4.22
+
+# Development
+pytest==7.4.3
+pytest-asyncio==0.21.1
