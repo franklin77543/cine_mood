@@ -207,6 +207,8 @@ Combines LLM understanding with vector search for intelligent, contextual recomm
 ### Architecture & Design
 - [Backend Architecture](docs/BACKEND_ARCHITECTURE.md) - Backend system architecture
 - [Database ER Diagram](docs/DATABASE_ER_DIAGRAM.md) - Database schema and relationships
+  - [ER Diagram (SVG)](docs/database/ER_Diagram.svg) - Visual database schema
+  - [Database Models (DBML)](docs/database/models.dbml) - DBML schema definition
 - [Architecture Dependency Audit](docs/ARCHITECTURE_DEPENDENCY_AUDIT.md) - Dependency analysis
 - [UI/UX Design Guide](docs/UI_UX_DESIGN.md) - Complete design system and wireframes
 
