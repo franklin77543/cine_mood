@@ -48,7 +48,7 @@ export function MovieDetailPage() {
       <div className="absolute inset-0 overflow-hidden">
         <div
           className="absolute inset-0 bg-cover bg-center blur-2xl scale-110"
-          style={{ backgroundImage: `url(${posterUrl})` }}
+          style={{ backgroundImage: `url(${backdropUrl})` }}
         ></div>
         <div className="absolute inset-0 bg-gradient-to-b from-slate-900/50 via-slate-900/80 to-slate-900"></div>
       </div>
