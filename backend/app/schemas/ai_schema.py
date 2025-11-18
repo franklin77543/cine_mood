@@ -29,6 +29,8 @@ class MovieRecommendation(BaseModel):
     genres: List[str]
     overview: Optional[str] = None
     release_date: Optional[str] = None
+    poster_path: Optional[str] = None
+    backdrop_path: Optional[str] = None
     vote_average: Optional[float] = None
     popularity: Optional[float] = None
     similarity_score: float
@@ -56,6 +58,8 @@ class SearchResult(BaseModel):
     title: str
     genres: List[str]
     overview: Optional[str] = None
+    poster_path: Optional[str] = None
+    backdrop_path: Optional[str] = None
     similarity_score: float
 
 
@@ -72,6 +76,8 @@ class SimilarMovieItem(BaseModel):
     title: str
     genres: List[str]
     overview: Optional[str] = None
+    poster_path: Optional[str] = None
+    backdrop_path: Optional[str] = None
     similarity_score: float
 
 

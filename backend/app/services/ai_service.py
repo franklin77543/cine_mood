@@ -98,6 +98,8 @@ class AIService:
                     "genres": metadata['genres'],
                     "overview": metadata.get('overview'),
                     "release_date": metadata.get('release_date'),
+                    "poster_path": metadata.get('poster_path'),
+                    "backdrop_path": metadata.get('backdrop_path'),
                     "vote_average": metadata.get('vote_average'),
                     "popularity": metadata.get('popularity'),
                     "similarity_score": round(similarity, 3),
@@ -177,6 +179,8 @@ class AIService:
                 "title": metadata['title'],
                 "genres": metadata['genres'],
                 "overview": metadata.get('overview'),
+                "poster_path": metadata.get('poster_path'),
+                "backdrop_path": metadata.get('backdrop_path'),
                 "similarity_score": round(similarity, 3)
             })
         
@@ -241,6 +245,8 @@ class AIService:
                 "title": meta['title'],
                 "genres": meta['genres'],
                 "overview": meta.get('overview'),
+                "poster_path": meta.get('poster_path'),
+                "backdrop_path": meta.get('backdrop_path'),
                 "similarity_score": round(similarity, 3)
             })
         

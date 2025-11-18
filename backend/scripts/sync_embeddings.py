@@ -58,6 +58,8 @@ def sync_embeddings():
                     'overview': movie.overview,
                     'genres': genre_names,
                     'release_date': str(movie.release_date) if movie.release_date else None,
+                    'poster_path': movie.poster_path,
+                    'backdrop_path': movie.backdrop_path,
                     'vote_average': movie.vote_average,
                     'popularity': movie.popularity
                 }
