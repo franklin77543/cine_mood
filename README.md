@@ -199,7 +199,29 @@ Combines LLM understanding with vector search for intelligent, contextual recomm
 
 ## 📚 Documentation
 
+### Project Documentation
+- [Requirements](docs/Requirements.md) - Project requirements and specifications
+- [Technical Specification](docs/Technical-Specification.md) - Detailed technical specifications
+- [Development Roadmap](docs/DEVELOPMENT_ROADMAP.md) - Project phases and milestones
+
+### Architecture & Design
+- [Backend Architecture](docs/BACKEND_ARCHITECTURE.md) - Backend system architecture
+- [Database ER Diagram](docs/DATABASE_ER_DIAGRAM.md) - Database schema and relationships
+- [Architecture Dependency Audit](docs/ARCHITECTURE_DEPENDENCY_AUDIT.md) - Dependency analysis
 - [UI/UX Design Guide](docs/UI_UX_DESIGN.md) - Complete design system and wireframes
+
+### Phase Documentation
+- [Phase 1: Data Layer](docs/PHASE1_DATA_LAYER.md) - Database setup and TMDB integration
+- [Phase 2: API Layer](docs/PHASE2_API_LAYER.md) - RESTful API implementation
+- [Phase 3: AI Layer](docs/PHASE3_AI_LAYER.md) - LLM and vector search implementation
+- [Phase 3: Test Report](docs/PHASE3_TEST_REPORT.md) - AI system testing results
+
+### Setup Guides
+- [Backend Startup Guide](docs/BACKEND_STARTUP_GUIDE.md) - Step-by-step backend setup
+
+### Hardware & Infrastructure
+- [Hardware Assessment](docs/Hardware-Assessment.md) - System requirements analysis
+- [OMEN Specification](docs/OMEN_Specification.md) - Development machine specifications
 
 ## 📄 License
 
