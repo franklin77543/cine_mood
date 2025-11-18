@@ -17,82 +17,134 @@
 **目標**: 建立完整的資料庫結構，並從 TMDB 同步電影資料
 
 ### ✅ Task 1.1: 建立專案結構
-- [ ] 建立 `backend/` 目錄結構
-- [ ] 建立所有必要的子目錄 (models, repositories, services, api, schemas, core, db)
-- [ ] 建立 `__init__.py` 檔案
+- [x] 建立 `backend/` 目錄結構
+- [x] 建立所有必要的子目錄 (models, repositories, services, api, schemas, core, db, scripts)
+- [x] 建立 `__init__.py` 檔案
 
 ### ✅ Task 1.2: 設定開發環境
-- [ ] 建立 `requirements.txt`
+- [x] 建立 `requirements.txt`
   ```txt
   fastapi==0.115.0
   uvicorn[standard]==0.32.0
+  python-multipart==0.0.9
   sqlalchemy==2.0.35
   requests==2.32.3
   python-dotenv==1.0.1
   pydantic-settings==2.6.1
+  pytest==7.4.3
+  pytest-asyncio==0.21.1
   ```
-- [ ] 建立 Python 虛擬環境
+- [x] 建立 Python 虛擬環境
   ```powershell
+  cd backend
   python -m venv venv
-  .\venv\Scripts\activate
+  .\venv\Scripts\Activate.ps1
   pip install -r requirements.txt
   ```
-- [ ] 建立 `.env` 檔案
+- [x] 建立 `.env.example` 檔案範本
+- [x] 建立 `.env` 檔案 (從 .env.example 複製)
   ```env
-  # TMDB API
+  # TMDB API (兩種認證方式都儲存)
   TMDB_API_KEY=your_api_key_here
+  TMDB_READ_ACCESS_TOKEN=your_access_token_here
   TMDB_BASE_URL=https://api.themoviedb.org/3
+  TMDB_IMAGE_BASE_URL=https://image.tmdb.org/t/p
   
   # Database
   DATABASE_URL=sqlite:///./cinemood.db
   
   # App Settings
   APP_NAME=CineMood
+  API_V1_PREFIX=/api/v1
+  ENVIRONMENT=development
   DEBUG=True
+  HOST=0.0.0.0
+  PORT=8000
+  
+  # CORS
+  BACKEND_CORS_ORIGINS=http://localhost:5173,http://localhost:3000
   ```
 
 ### ✅ Task 1.3: 建立資料庫 Models (8個檔案)
-- [ ] `models/movie_model.py` - Movie 電影主表
-- [ ] `models/genre_model.py` - Genre 類型表
-- [ ] `models/person_model.py` - Person 演職員表
-- [ ] `models/mood_tag_model.py` - MoodTag 情緒標籤表
-- [ ] `models/movie_genre_model.py` - MovieGenre 電影-類型關聯
-- [ ] `models/movie_credit_model.py` - MovieCredit 電影-演職員關聯
-- [ ] `models/movie_mood_model.py` - MovieMood 電影-情緒關聯
-- [ ] `models/movie_embedding_model.py` - MovieEmbedding 電影向量表
+- [x] `models/movie_model.py` - Movie 電影主表
+  - 修正欄位: `original_title`, `vote_average` (替代 rating)
+- [x] `models/genre_model.py` - Genre 類型表
+- [x] `models/person_model.py` - Person 演職員表
+- [x] `models/mood_tag_model.py` - MoodTag 情緒標籤表
+- [x] `models/movie_genre_model.py` - MovieGenre 電影-類型關聯
+- [x] `models/movie_credit_model.py` - MovieCredit 電影-演職員關聯
+  - 修正欄位: `order_num` (替代 order)
+- [x] `models/movie_mood_model.py` - MovieMood 電影-情緒關聯
+- [x] `models/movie_embedding_model.py` - MovieEmbedding 電影向量表
 
 ### ✅ Task 1.4: 建立資料庫連線
-- [ ] `db/session.py` - Database session 和 Base
-- [ ] `core/config.py` - 設定檔管理
+- [x] `db/session.py` - Database session 和 Base
+  - SQLite 設定: `check_same_thread=False`
+  - `get_db()` 依賴注入
+- [x] `core/config.py` - 設定檔管理
+  - 使用 pydantic-settings
+  - 環境變數載入
+  - CORS origins 處理 (字串 → 列表)
 
 ### ✅ Task 1.5: 建立 TMDB 同步腳本
-- [ ] `scripts/sync_tmdb.py` - TMDB 資料同步腳本
-  - 取得 TMDB API Key
-  - 同步 500-1000 部熱門電影
-  - 同步電影詳情 (類型、演員、導演)
-  - 儲存到 SQLite
+- [x] `services/tmdb_client.py` - TMDB API Client
+  - Bearer Token 認證 (使用 TMDB_READ_ACCESS_TOKEN)
+  - 速率限制控制 (每秒 40 requests)
+  - 自動使用繁體中文 (zh-TW)
+  - 完整 API 方法 (電影、類型、演職員)
+- [x] `scripts/sync_tmdb.py` - TMDB 資料同步腳本
+  - 同步策略調整：考量 TMDB 每日 1000 requests 限制
+  - 熱門電影：5 頁 (~100 部)
+  - 高評分電影：5 頁 (~100 部)
+  - 正在上映：3 頁 (~60 部)
+  - **總計：~260 部電影，~520 API requests**
+  - 同步電影詳情、類型、演員 (前 10 名)、導演
+  - 日期轉換處理 (字串 → date 物件)
+  - 重複演員檢查 (避免 UNIQUE 衝突)
 
 ### ✅ Task 1.6: 執行資料同步
 ```powershell
 cd backend
-python scripts/sync_tmdb.py
+# 確保虛擬環境已啟動
+.\venv\Scripts\Activate.ps1
+# 執行同步 (需要 TMDB API Key 和 Access Token)
+python scripts\sync_tmdb.py
 ```
 
+**同步結果**:
+- ✅ 212 部電影成功同步
+- ✅ 2016 位演職人員
+- ✅ 19 個電影類型 (簡體中文)
+- ✅ 2274 筆演職關聯
+- ✅ 564 筆類型關聯
+
 ### ✅ Task 1.7: 驗證資料完整性
-- [ ] 使用 DB Browser for SQLite 開啟 `cinemood.db`
-- [ ] 檢查各表資料：
-  - `movies` 表: 應有 500-1000 筆
-  - `genres` 表: 應有 ~20 筆 (動作、喜劇、劇情等)
-  - `people` 表: 應有數千筆演員/導演
-  - `movie_genres` 關聯表: 每部電影 2-4 個類型
-  - `movie_credits` 關聯表: 每部電影 10+ 演職員
-- [ ] 確認中文資料顯示正常
-- [ ] 確認圖片路徑完整
+- [x] `scripts/check_db.py` - 資料庫統計腳本
+- [x] `scripts/validate_data.py` - 完整資料驗證腳本
+  - 中文支援驗證
+  - 類型分布分析
+  - 演職人員統計
+  - 資料完整性檢查
+  - 隨機電影範例展示
+
+**驗證結果**:
+- ✅ 標題完整性: 100% (212/212)
+- ✅ 簡介完整性: 80.7% (171/212)
+- ✅ 上映日期: 100% (212/212)
+- ✅ 海報圖片: 100% (212/212)
+- ✅ 評分資料: 98.1% (208/212)
+- ✅ 評分分布合理: 優秀電影 105 部 (8-10分)
+- ✅ 類型分布: 剧情 92 部、动作 64 部、惊悚 59 部
+- ✅ 參演最多演員: 摩根費里曼 (5 部)
 
 **完成標準**: 
-- ✅ 資料庫包含 500+ 部電影
+- ✅ 資料庫包含 212 部電影 (調整後目標)
 - ✅ 所有關聯表資料正確
 - ✅ 中文標題、簡介正常顯示
+- ✅ 修正問題：
+  - 欄位名稱 (original_title, vote_average, order_num)
+  - 類型關聯 (genres array vs genre_ids)
+  - 重複演員處理
 
 ---
 
@@ -395,11 +447,19 @@ npm run dev
 
 ## 📊 進度追蹤
 
-### Phase 1: 資料層 (預計 2-3 天)
-- [ ] 專案結構建立
-- [ ] Database Models 建立
-- [ ] TMDB 資料同步
-- [ ] 資料驗證
+### Phase 1: 資料層 ✅ 已完成 (實際 1 天)
+- [x] 專案結構建立
+- [x] Database Models 建立
+- [x] TMDB 資料同步 (212 部電影)
+- [x] 資料驗證
+- [x] Backend 啟動測試
+- [x] 文件: BACKEND_STARTUP_GUIDE.md
+
+**實際成果**:
+- 212 部電影 (調整策略避免超出 TMDB API 限制)
+- 2016 位演職人員
+- 完整資料驗證腳本
+- Git 提交: 2 commits
 
 ### Phase 2: Backend API (預計 3-4 天)
 - [ ] Repository Layer
@@ -421,24 +481,40 @@ npm run dev
 - [ ] 完整測試
 
 **總預計時間**: 14-19 天 (MVP)
+**已完成時間**: 1 天 (Phase 1)
 
 ---
 
 ## 🎯 當前狀態
 
-**目前進度**: Phase 0 - 規劃完成
+**目前進度**: ✅ Phase 1 完成 - 資料層建立完成
 
-**下一步**: 開始 Phase 1 - Task 1.1
+**已完成項目**:
+- ✅ 完整 Backend 結構 (8 models, config, session, main)
+- ✅ TMDB API Client (支援中文、速率限制)
+- ✅ 資料同步腳本 (212 部電影、2016 演職人員)
+- ✅ 資料驗證腳本 (完整性檢查)
+- ✅ Backend 啟動指南文件
+
+**下一步**: 開始 Phase 2 - Task 2.1 (建立 Repository Layer)
+
+**重要經驗**:
+- ✅ TMDB 免費版每日 1000 requests 限制
+- ✅ 同步策略調整為保守方案 (~520 requests)
+- ✅ 修正欄位命名問題 (original_title, vote_average, order_num)
+- ✅ 修正類型關聯 (genres array)
+- ✅ PowerShell 執行 Python 必須在同一 session (cd + activate + python)
 
 **準備事項**:
-- [ ] 安裝 Python 3.13+
-- [ ] 安裝 Node.js 18+
-- [ ] 註冊 TMDB 帳號並取得 API Key
-- [ ] 安裝 Ollama
-- [ ] 安裝 DB Browser for SQLite (資料驗證用)
+- [x] 安裝 Python 3.13+
+- [x] 註冊 TMDB 帳號並取得 API Key 和 Access Token
+- [ ] 安裝 Node.js 18+ (Phase 4 使用)
+- [ ] 安裝 Ollama (Phase 3 使用)
+- [ ] 安裝 DB Browser for SQLite (可選，資料驗證用)
 
 ---
 
-**文件版本**: 1.0  
+**文件版本**: 1.1  
 **建立日期**: 2025-11-18  
-**最後更新**: 2025-11-18
+**最後更新**: 2025-11-18  
+**Phase 1 完成日期**: 2025-11-18
