@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineMood - 心情電影推薦</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#6366f1',
+                        secondary: '#8b5cf6',
+                        accent: '#ec4899',
+                        'mood-happy': '#fbbf24',
+                        'mood-sad': '#60a5fa',
+                        'mood-exciting': '#ef4444',
+                        'mood-calm': '#10b981',
+                        'mood-dark': '#1f2937',
+                    },
+                    fontFamily: {
+                        sans: ['Noto Sans TC', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes pulse-ai {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+        
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out;
+        }
+        
+        .pulse-ai {
+            animation: pulse-ai 2s ease-in-out infinite;
+        }
+        
+        .shimmer {
+            background: linear-gradient(90deg, #1e293b 0%, #334155 50%, #1e293b 100%);
+            background-size: 1000px 100%;
+            animation: shimmer 2s infinite;
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: scale(1.05) translateY(-5px);
+            box-shadow: 0 20px 40px rgba(99, 102, 241, 0.3);
+        }
+        
+        .gradient-hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .gradient-ai {
+            background: linear-gradient(45deg, #8b5cf6 0%, #ec4899 100%);
+        }
+        
+        /* 模糊背景效果 */
+        .backdrop-blur-hero {
+            backdrop-filter: blur(20px);
+            background: rgba(15, 23, 42, 0.7);
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 font-sans">
+    
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 backdrop-blur-hero border-b border-slate-700">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <span class="text-3xl">🎬</span>
+                    <span class="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                        CineMood
+                    </span>
+                </div>
+                
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="#" class="hover:text-primary transition">首頁</a>
+                    <a href="#" class="hover:text-primary transition">探索</a>
+                    <a href="#" class="hover:text-primary transition">我的片單</a>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <button class="p-2 hover:bg-slate-800 rounded-lg transition">
+                        🔍
+                    </button>
+                    <button class="px-4 py-2 bg-primary hover:bg-indigo-600 rounded-lg transition">
+                        登入
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Hero Section -->
+    <section class="relative min-h-screen flex items-center justify-center overflow-hidden mt-16">
+        <!-- 背景漸變 -->
+        <div class="absolute inset-0 gradient-hero opacity-20"></div>
+        
+        <!-- 背景模糊電影圖 -->
+        <div class="absolute inset-0 opacity-10">
+            <div class="w-full h-full bg-cover bg-center" 
+                 style="background-image: url('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=1920');"></div>
+        </div>
+        
+        <div class="relative z-10 container mx-auto px-6 text-center">
+            <h1 class="text-5xl md:text-7xl font-bold mb-6 fade-in-up">
+                今天想看什麼？
+            </h1>
+            <p class="text-xl md:text-2xl text-slate-300 mb-12 fade-in-up" style="animation-delay: 0.1s;">
+                告訴我你的心情，讓 AI 為你找到最適合的電影
+            </p>
+            
+            <!-- AI 輸入框 -->
+            <div class="max-w-3xl mx-auto mb-8 fade-in-up" style="animation-delay: 0.2s;">
+                <div class="relative">
+                    <textarea 
+                        id="aiInput"
+                        class="w-full px-6 py-4 bg-slate-800/50 backdrop-blur-sm border-2 border-slate-700 rounded-2xl text-lg resize-none focus:outline-none focus:border-primary transition"
+                        rows="3"
+                        placeholder="💬 我心情不好，想看療癒的電影..."
+                    ></textarea>
+                    <button 
+                        onclick="getAIRecommendation()"
+                        class="absolute bottom-4 right-4 px-6 py-2 gradient-ai text-white rounded-lg hover:opacity-90 transition font-medium">
+                        AI 推薦
+                    </button>
+                </div>
+                <p class="mt-3 text-sm text-slate-400">
+                    💡 例如: "輕鬆搞笑的週末電影" 或 "關於時間旅行的科幻片"
+                </p>
+            </div>
+            
+            <!-- 心情快捷選項 -->
+            <div class="flex flex-wrap justify-center gap-3 mb-12 fade-in-up" style="animation-delay: 0.3s;">
+                <button onclick="selectMood('happy')" class="mood-tag px-6 py-3 bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-full hover:border-mood-happy hover:bg-amber-500/10 transition">
+                    😊 輕鬆
+                </button>
+                <button onclick="selectMood('sad')" class="mood-tag px-6 py-3 bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-full hover:border-mood-sad hover:bg-blue-500/10 transition">
+                    😢 療癒
+                </button>
+                <button onclick="selectMood('exciting')" class="mood-tag px-6 py-3 bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-full hover:border-mood-exciting hover:bg-red-500/10 transition">
+                    🔥 刺激
+                </button>
+                <button onclick="selectMood('calm')" class="mood-tag px-6 py-3 bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-full hover:border-mood-calm hover:bg-green-500/10 transition">
+                    🌿 平靜
+                </button>
+                <button onclick="selectMood('deep')" class="mood-tag px-6 py-3 bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-full hover:border-mood-dark hover:bg-gray-700/30 transition">
+                    🤔 深度
+                </button>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 推薦區塊 (初始隱藏) -->
+    <section id="recommendationSection" class="hidden py-20 bg-slate-900">
+        <div class="container mx-auto px-6">
+            
+            <!-- AI 分析結果 -->
+            <div id="aiAnalysis" class="hidden max-w-4xl mx-auto mb-12">
+                <div class="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-2xl p-6">
+                    <div class="flex items-start space-x-4">
+                        <div class="flex-shrink-0">
+                            <div class="w-12 h-12 bg-gradient-ai rounded-full flex items-center justify-center pulse-ai">
+                                🤖
+                            </div>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-slate-400 mb-3">💭 你說: <span id="userQuery" class="text-white font-medium"></span></p>
+                            <div class="bg-slate-900/50 rounded-lg p-4">
+                                <p class="text-sm text-slate-300 mb-2">🧠 AI 理解:</p>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="px-3 py-1 bg-primary/20 text-primary rounded-full text-sm">心情: 需要療癒</span>
+                                    <span class="px-3 py-1 bg-secondary/20 text-secondary rounded-full text-sm">偏好: 感人、溫暖</span>
+                                    <span class="px-3 py-1 bg-accent/20 text-accent rounded-full text-sm">推薦類型: 劇情、動畫</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 推薦標題 -->
+            <h2 class="text-3xl font-bold text-center mb-12">
+                ✨ 為你推薦 <span class="text-primary">5</span> 部電影
+            </h2>
+            
+            <!-- 推薦卡片 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+                <!-- 卡片範例 1 -->
+                <div class="card-hover bg-slate-800 rounded-2xl overflow-hidden border border-slate-700">
+                    <div class="relative h-80 bg-gradient-to-br from-slate-700 to-slate-800">
+                        <img src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=400" 
+                             alt="電影海報" 
+                             class="w-full h-full object-cover">
+                        <div class="absolute top-3 right-3 px-3 py-1 bg-black/70 backdrop-blur-sm rounded-full text-sm">
+                            ⭐ 8.4
+                        </div>
+                    </div>
+                    <div class="p-5">
+                        <h3 class="text-xl font-bold mb-2">新天堂樂園</h3>
+                        <div class="flex items-center space-x-2 text-sm text-slate-400 mb-3">
+                            <span>📅 1988</span>
+                            <span>•</span>
+                            <span>🎭 劇情、愛情</span>
+                        </div>
+                        
+                        <div class="bg-slate-900/50 rounded-lg p-3 mb-4">
+                            <p class="text-xs text-slate-400 mb-1">💡 AI 推薦理由:</p>
+                            <p class="text-sm text-slate-200">
+                                這部電影能讓你感受到童年的溫暖與電影的魔力，非常適合療癒心情...
+                            </p>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <div class="flex justify-between text-xs text-slate-400 mb-1">
+                                <span>相似度</span>
+                                <span>85%</span>
+                            </div>
+                            <div class="h-2 bg-slate-700 rounded-full overflow-hidden">
+                                <div class="h-full bg-gradient-ai" style="width: 85%"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex space-x-2">
+                            <a href="detail.html" class="flex-1 px-4 py-2 bg-primary hover:bg-indigo-600 rounded-lg text-sm transition text-center">
+                                詳情
+                            </a>
+                            <button class="px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg text-sm transition">
+                                ♡
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 卡片範例 2 -->
+                <div class="card-hover bg-slate-800 rounded-2xl overflow-hidden border border-slate-700">
+                    <div class="relative h-80 bg-gradient-to-br from-slate-700 to-slate-800">
+                        <img src="https://images.unsplash.com/photo-1594908900066-3f47337549d8?w=400" 
+                             alt="電影海報" 
+                             class="w-full h-full object-cover">
+                        <div class="absolute top-3 right-3 px-3 py-1 bg-black/70 backdrop-blur-sm rounded-full text-sm">
+                            ⭐ 8.2
+                        </div>
+                    </div>
+                    <div class="p-5">
+                        <h3 class="text-xl font-bold mb-2">我想吃掉你的胰臟</h3>
+                        <div class="flex items-center space-x-2 text-sm text-slate-400 mb-3">
+                            <span>📅 2018</span>
+                            <span>•</span>
+                            <span>🎭 動畫、劇情</span>
+                        </div>
+                        
+                        <div class="bg-slate-900/50 rounded-lg p-3 mb-4">
+                            <p class="text-xs text-slate-400 mb-1">💡 AI 推薦理由:</p>
+                            <p class="text-sm text-slate-200">
+                                一個關於生命、友情與遺憾的溫柔故事，會讓你重新思考珍惜當下...
+                            </p>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <div class="flex justify-between text-xs text-slate-400 mb-1">
+                                <span>相似度</span>
+                                <span>82%</span>
+                            </div>
+                            <div class="h-2 bg-slate-700 rounded-full overflow-hidden">
+                                <div class="h-full bg-gradient-ai" style="width: 82%"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex space-x-2">
+                            <a href="detail.html" class="flex-1 px-4 py-2 bg-primary hover:bg-indigo-600 rounded-lg text-sm transition text-center">
+                                詳情
+                            </a>
+                            <button class="px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg text-sm transition">
+                                ♡
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 卡片範例 3 -->
+                <div class="card-hover bg-slate-800 rounded-2xl overflow-hidden border border-slate-700">
+                    <div class="relative h-80 bg-gradient-to-br from-slate-700 to-slate-800">
+                        <img src="https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=400" 
+                             alt="電影海報" 
+                             class="w-full h-full object-cover">
+                        <div class="absolute top-3 right-3 px-3 py-1 bg-black/70 backdrop-blur-sm rounded-full text-sm">
+                            ⭐ 8.0
+                        </div>
+                    </div>
+                    <div class="p-5">
+                        <h3 class="text-xl font-bold mb-2">心靈捕手</h3>
+                        <div class="flex items-center space-x-2 text-sm text-slate-400 mb-3">
+                            <span>📅 1997</span>
+                            <span>•</span>
+                            <span>🎭 劇情</span>
+                        </div>
+                        
+                        <div class="bg-slate-900/50 rounded-lg p-3 mb-4">
+                            <p class="text-xs text-slate-400 mb-1">💡 AI 推薦理由:</p>
+                            <p class="text-sm text-slate-200">
+                                一個天才少年與心理醫生的故事，探討自我認同與人生方向，非常療癒...
+                            </p>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <div class="flex justify-between text-xs text-slate-400 mb-1">
+                                <span>相似度</span>
+                                <span>78%</span>
+                            </div>
+                            <div class="h-2 bg-slate-700 rounded-full overflow-hidden">
+                                <div class="h-full bg-gradient-ai" style="width: 78%"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex space-x-2">
+                            <a href="detail.html" class="flex-1 px-4 py-2 bg-primary hover:bg-indigo-600 rounded-lg text-sm transition text-center">
+                                詳情
+                            </a>
+                            <button class="px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg text-sm transition">
+                                ♡
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 熱門推薦 -->
+    <section class="py-20 bg-slate-950/50">
+        <div class="container mx-auto px-6">
+            <div class="flex items-center justify-between mb-8">
+                <h2 class="text-3xl font-bold">🔥 熱門推薦</h2>
+                <button class="text-primary hover:text-indigo-400 transition">查看全部 →</button>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                <!-- 簡化卡片 -->
+                <a href="detail.html" class="card-hover bg-slate-800 rounded-xl overflow-hidden border border-slate-700 cursor-pointer block">
+                    <div class="relative h-60 shimmer">
+                        <img src="https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=300" 
+                             alt="電影" 
+                             class="w-full h-full object-cover opacity-0 hover:opacity-100 transition duration-300">
+                    </div>
+                    <div class="p-3">
+                        <p class="font-medium truncate">星際效應</p>
+                        <p class="text-sm text-slate-400">⭐ 8.5</p>
+                    </div>
+                </a>
+                
+                <a href="detail.html" class="card-hover bg-slate-800 rounded-xl overflow-hidden border border-slate-700 cursor-pointer block">
+                    <div class="relative h-60 shimmer">
+                        <img src="https://images.unsplash.com/photo-1485846234645-a62644f84728?w=300" 
+                             alt="電影" 
+                             class="w-full h-full object-cover opacity-0 hover:opacity-100 transition duration-300">
+                    </div>
+                    <div class="p-3">
+                        <p class="font-medium truncate">回到未來</p>
+                        <p class="text-sm text-slate-400">⭐ 8.3</p>
+                    </div>
+                </a>
+                
+                <a href="detail.html" class="card-hover bg-slate-800 rounded-xl overflow-hidden border border-slate-700 cursor-pointer block">
+                    <div class="relative h-60 shimmer">
+                        <img src="https://images.unsplash.com/photo-1574267432644-f65bba3c9e9e?w=300" 
+                             alt="電影" 
+                             class="w-full h-full object-cover opacity-0 hover:opacity-100 transition duration-300">
+                    </div>
+                    <div class="p-3">
+                        <p class="font-medium truncate">黑暗騎士</p>
+                        <p class="text-sm text-slate-400">⭐ 9.0</p>
+                    </div>
+                </a>
+                
+                <a href="detail.html" class="card-hover bg-slate-800 rounded-xl overflow-hidden border border-slate-700 cursor-pointer block">
+                    <div class="relative h-60 shimmer">
+                        <img src="https://images.unsplash.com/photo-1518676590629-3dcbd9c5a5c9?w=300" 
+                             alt="電影" 
+                             class="w-full h-full object-cover opacity-0 hover:opacity-100 transition duration-300">
+                    </div>
+                    <div class="p-3">
+                        <p class="font-medium truncate">全面啟動</p>
+                        <p class="text-sm text-slate-400">⭐ 8.7</p>
+                    </div>
+                </a>
+                
+                <a href="detail.html" class="card-hover bg-slate-800 rounded-xl overflow-hidden border border-slate-700 cursor-pointer block">
+                    <div class="relative h-60 shimmer">
+                        <img src="https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=300" 
+                             alt="電影" 
+                             class="w-full h-full object-cover opacity-0 hover:opacity-100 transition duration-300">
+                    </div>
+                    <div class="p-3">
+                        <p class="font-medium truncate">鐵達尼號</p>
+                        <p class="text-sm text-slate-400">⭐ 7.9</p>
+                    </div>
+                </a>
+                
+                <a href="detail.html" class="card-hover bg-slate-800 rounded-xl overflow-hidden border border-slate-700 cursor-pointer block">
+                    <div class="relative h-60 shimmer">
+                        <img src="https://images.unsplash.com/photo-1595769816263-9b910be24d5f?w=300" 
+                             alt="電影" 
+                             class="w-full h-full object-cover opacity-0 hover:opacity-100 transition duration-300">
+                    </div>
+                    <div class="p-3">
+                        <p class="font-medium truncate">魔戒</p>
+                        <p class="text-sm text-slate-400">⭐ 8.8</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="py-12 bg-slate-950 border-t border-slate-800">
+        <div class="container mx-auto px-6 text-center text-slate-400">
+            <p class="mb-2">🎬 CineMood - AI 驅動的心情電影推薦</p>
+            <p class="text-sm">Powered by Ollama + Llama3.1 + Sentence Transformers</p>
+        </div>
+    </footer>
+    
+    <script>
+        // AI 推薦功能
+        function getAIRecommendation() {
+            const input = document.getElementById('aiInput').value;
+            if (!input.trim()) return;
+            
+            // 顯示推薦區塊
+            const section = document.getElementById('recommendationSection');
+            section.classList.remove('hidden');
+            
+            // 顯示 AI 分析
+            const analysis = document.getElementById('aiAnalysis');
+            analysis.classList.remove('hidden');
+            
+            // 設置用戶查詢
+            document.getElementById('userQuery').textContent = input;
+            
+            // 滾動到推薦區
+            section.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // 心情選擇
+        function selectMood(mood) {
+            const moodTexts = {
+                'happy': '輕鬆搞笑的週末電影',
+                'sad': '我心情不好，想看療癒的電影',
+                'exciting': '刺激的動作冒險片',
+                'calm': '平靜的奇幻故事',
+                'deep': '讓人思考的深度劇情'
+            };
+            
+            document.getElementById('aiInput').value = moodTexts[mood];
+            
+            // 可選：自動觸發推薦
+            // getAIRecommendation();
+        }
+        
+        // Enter 發送
+        document.getElementById('aiInput').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                getAIRecommendation();
+            }
+        });
+    </script>
+    
+</body>
+</html>

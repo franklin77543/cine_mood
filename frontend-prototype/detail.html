@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新天堂樂園 - CineMood</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#6366f1',
+                        secondary: '#8b5cf6',
+                        accent: '#ec4899',
+                    },
+                    fontFamily: {
+                        sans: ['Noto Sans TC', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: scale(1.05) translateY(-5px);
+            box-shadow: 0 20px 40px rgba(99, 102, 241, 0.3);
+        }
+        
+        .gradient-ai {
+            background: linear-gradient(45deg, #8b5cf6 0%, #ec4899 100%);
+        }
+        
+        .backdrop-blur-hero {
+            backdrop-filter: blur(40px);
+            background: rgba(15, 23, 42, 0.85);
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 font-sans">
+    
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 backdrop-blur-hero border-b border-slate-700">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-6">
+                    <a href="index.html" class="flex items-center space-x-2">
+                        <span class="text-3xl">🎬</span>
+                        <span class="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                            CineMood
+                        </span>
+                    </a>
+                    <a href="index.html" class="text-slate-400 hover:text-white transition">← 返回</a>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <button class="p-2 hover:bg-slate-800 rounded-lg transition">
+                        ♡
+                    </button>
+                    <button class="p-2 hover:bg-slate-800 rounded-lg transition">
+                        ↗
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Hero Section with Backdrop -->
+    <section class="relative min-h-screen pt-24">
+        <!-- 背景模糊大圖 -->
+        <div class="absolute inset-0 overflow-hidden">
+            <div class="absolute inset-0 bg-cover bg-center blur-2xl scale-110" 
+                 style="background-image: url('https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=1920');"></div>
+            <div class="absolute inset-0 bg-gradient-to-b from-slate-900/50 via-slate-900/80 to-slate-900"></div>
+        </div>
+        
+        <!-- 內容 -->
+        <div class="relative z-10 container mx-auto px-6 py-12">
+            <div class="max-w-6xl mx-auto">
+                
+                <!-- 主要資訊 -->
+                <div class="grid md:grid-cols-3 gap-8 mb-16">
+                    <!-- 海報 -->
+                    <div class="md:col-span-1">
+                        <div class="sticky top-24">
+                            <img src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=600" 
+                                 alt="新天堂樂園" 
+                                 class="w-full rounded-2xl shadow-2xl">
+                            
+                            <div class="mt-6 space-y-3">
+                                <button class="w-full px-6 py-3 bg-primary hover:bg-indigo-600 rounded-xl font-medium transition">
+                                    ▶ 觀看預告
+                                </button>
+                                <button class="w-full px-6 py-3 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-xl font-medium transition">
+                                    ♡ 加入片單
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 詳細資訊 -->
+                    <div class="md:col-span-2">
+                        <h1 class="text-5xl font-bold mb-4">新天堂樂園</h1>
+                        <p class="text-2xl text-slate-400 mb-6">Cinema Paradiso (1988)</p>
+                        
+                        <!-- 評分與資訊 -->
+                        <div class="flex flex-wrap items-center gap-4 mb-8">
+                            <div class="flex items-center space-x-2">
+                                <span class="text-4xl">⭐</span>
+                                <div>
+                                    <div class="text-2xl font-bold">8.4</div>
+                                    <div class="text-xs text-slate-400">1,234 評分</div>
+                                </div>
+                            </div>
+                            
+                            <div class="h-12 w-px bg-slate-700"></div>
+                            
+                            <div class="text-slate-300">
+                                <div class="text-sm text-slate-400">年份</div>
+                                <div class="font-medium">1988</div>
+                            </div>
+                            
+                            <div class="h-12 w-px bg-slate-700"></div>
+                            
+                            <div class="text-slate-300">
+                                <div class="text-sm text-slate-400">時長</div>
+                                <div class="font-medium">155 分鐘</div>
+                            </div>
+                            
+                            <div class="h-12 w-px bg-slate-700"></div>
+                            
+                            <div class="text-slate-300">
+                                <div class="text-sm text-slate-400">類型</div>
+                                <div class="flex gap-2">
+                                    <span class="px-3 py-1 bg-primary/20 text-primary rounded-full text-sm">劇情</span>
+                                    <span class="px-3 py-1 bg-accent/20 text-accent rounded-full text-sm">愛情</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 劇情簡介 -->
+                        <div class="mb-8">
+                            <h2 class="text-2xl font-bold mb-4">📝 劇情簡介</h2>
+                            <p class="text-slate-300 leading-relaxed text-lg">
+                                這是一個關於電影、友誼與成長的溫馨故事。小鎮上的電影院「新天堂」是小男孩多多的避風港，
+                                在那裡他與放映師艾費多建立了深厚的忘年之交。透過一幕幕經典電影的片段，
+                                導演朱賽佩·托納多雷用最溫柔的鏡頭語言，訴說著對電影的熱愛、對故鄉的思念，
+                                以及那些無法重來的青春歲月。這是一封寫給電影的情書，也是每個人心中都有的那座「新天堂」。
+                            </p>
+                        </div>
+                        
+                        <!-- AI 推薦理由 -->
+                        <div class="bg-gradient-to-r from-purple-500/10 to-pink-500/10 border border-purple-500/30 rounded-2xl p-6 mb-8">
+                            <div class="flex items-start space-x-4">
+                                <div class="flex-shrink-0">
+                                    <div class="w-12 h-12 gradient-ai rounded-full flex items-center justify-center">
+                                        🤖
+                                    </div>
+                                </div>
+                                <div>
+                                    <h3 class="text-xl font-bold mb-2">💡 AI 推薦理由</h3>
+                                    <p class="text-slate-200 leading-relaxed">
+                                        當你心情不好時，這部電影能帶你回到最純真的時光。它不是刻意煽情，
+                                        而是用溫暖的故事和懷舊的情懷，讓你感受到生命中那些美好的瞬間。
+                                        電影中的友情、初戀和夢想會提醒你，即使經歷挫折，心中依然有值得珍惜的回憶。
+                                        看完後會有種被溫柔擁抱的感覺，非常適合療癒受傷的心靈。
+                                    </p>
+                                    <div class="mt-3 flex items-center space-x-2">
+                                        <span class="text-sm text-slate-400">相似度:</span>
+                                        <div class="flex-1 h-2 bg-slate-700 rounded-full overflow-hidden max-w-xs">
+                                            <div class="h-full gradient-ai" style="width: 85%"></div>
+                                        </div>
+                                        <span class="text-sm font-medium text-purple-400">85%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 演員陣容 -->
+                        <div class="mb-8">
+                            <h2 class="text-2xl font-bold mb-4">👥 演員陣容</h2>
+                            <div class="grid grid-cols-3 gap-4">
+                                <div class="text-center">
+                                    <div class="w-24 h-24 bg-slate-700 rounded-full mx-auto mb-2"></div>
+                                    <p class="font-medium">Philippe Noiret</p>
+                                    <p class="text-sm text-slate-400">艾費多</p>
+                                </div>
+                                <div class="text-center">
+                                    <div class="w-24 h-24 bg-slate-700 rounded-full mx-auto mb-2"></div>
+                                    <p class="font-medium">Salvatore Cascio</p>
+                                    <p class="text-sm text-slate-400">小多多</p>
+                                </div>
+                                <div class="text-center">
+                                    <div class="w-24 h-24 bg-slate-700 rounded-full mx-auto mb-2"></div>
+                                    <p class="font-medium">Marco Leonardi</p>
+                                    <p class="text-sm text-slate-400">青年多多</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 相似電影推薦 -->
+                <div class="mb-16">
+                    <h2 class="text-3xl font-bold mb-8">🎬 相似電影 (AI 推薦)</h2>
+                    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                        
+                        <a href="detail.html" class="card-hover bg-slate-800 rounded-xl overflow-hidden border border-slate-700 block">
+                            <div class="relative h-64 bg-slate-700">
+                                <img src="https://images.unsplash.com/photo-1594908900066-3f47337549d8?w=300" 
+                                     alt="相似電影" 
+                                     class="w-full h-full object-cover">
+                                <div class="absolute top-2 right-2 px-2 py-1 bg-black/70 backdrop-blur-sm rounded-full text-xs">
+                                    87%
+                                </div>
+                            </div>
+                            <div class="p-3">
+                                <p class="font-medium truncate">我想吃掉你的胰臟</p>
+                                <p class="text-sm text-slate-400">⭐ 8.2</p>
+                            </div>
+                        </a>
+                        
+                        <a href="detail.html" class="card-hover bg-slate-800 rounded-xl overflow-hidden border border-slate-700 block">
+                            <div class="relative h-64 bg-slate-700">
+                                <img src="https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=300" 
+                                     alt="相似電影" 
+                                     class="w-full h-full object-cover">
+                                <div class="absolute top-2 right-2 px-2 py-1 bg-black/70 backdrop-blur-sm rounded-full text-xs">
+                                    82%
+                                </div>
+                            </div>
+                            <div class="p-3">
+                                <p class="font-medium truncate">心靈捕手</p>
+                                <p class="text-sm text-slate-400">⭐ 8.0</p>
+                            </div>
+                        </a>
+                        
+                        <a href="detail.html" class="card-hover bg-slate-800 rounded-xl overflow-hidden border border-slate-700 block">
+                            <div class="relative h-64 bg-slate-700">
+                                <img src="https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=300" 
+                                     alt="相似電影" 
+                                     class="w-full h-full object-cover">
+                                <div class="absolute top-2 right-2 px-2 py-1 bg-black/70 backdrop-blur-sm rounded-full text-xs">
+                                    79%
+                                </div>
+                            </div>
+                            <div class="p-3">
+                                <p class="font-medium truncate">美麗人生</p>
+                                <p class="text-sm text-slate-400">⭐ 8.6</p>
+                            </div>
+                        </a>
+                        
+                        <a href="detail.html" class="card-hover bg-slate-800 rounded-xl overflow-hidden border border-slate-700 block">
+                            <div class="relative h-64 bg-slate-700">
+                                <img src="https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?w=300" 
+                                     alt="相似電影" 
+                                     class="w-full h-full object-cover">
+                                <div class="absolute top-2 right-2 px-2 py-1 bg-black/70 backdrop-blur-sm rounded-full text-xs">
+                                    75%
+                                </div>
+                            </div>
+                            <div class="p-3">
+                                <p class="font-medium truncate">情書</p>
+                                <p class="text-sm text-slate-400">⭐ 8.1</p>
+                            </div>
+                        </a>
+                        
+                        <a href="detail.html" class="card-hover bg-slate-800 rounded-xl overflow-hidden border border-slate-700 block">
+                            <div class="relative h-64 bg-slate-700">
+                                <img src="https://images.unsplash.com/photo-1524712245354-2c4e5e7121c0?w=300" 
+                                     alt="相似電影" 
+                                     class="w-full h-full object-cover">
+                                <div class="absolute top-2 right-2 px-2 py-1 bg-black/70 backdrop-blur-sm rounded-full text-xs">
+                                    72%
+                                </div>
+                            </div>
+                            <div class="p-3">
+                                <p class="font-medium truncate">海上鋼琴師</p>
+                                <p class="text-sm text-slate-400">⭐ 8.5</p>
+                            </div>
+                        </a>
+                        
+                    </div>
+                </div>
+                
+                <!-- 觀影心得 -->
+                <div>
+                    <h2 class="text-3xl font-bold mb-6">💬 觀影心得</h2>
+                    <div class="bg-slate-800 border border-slate-700 rounded-2xl p-6">
+                        <textarea 
+                            class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 resize-none focus:outline-none focus:border-primary transition"
+                            rows="4"
+                            placeholder="寫下你的觀影心得..."></textarea>
+                        <div class="mt-4 flex justify-between items-center">
+                            <div class="flex space-x-2">
+                                <button class="px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg text-sm transition">
+                                    ⭐ 評分
+                                </button>
+                                <button class="px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg text-sm transition">
+                                    🏷️ 標籤
+                                </button>
+                            </div>
+                            <button class="px-6 py-2 bg-primary hover:bg-indigo-600 rounded-lg transition">
+                                發布
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="py-12 bg-slate-950 border-t border-slate-800">
+        <div class="container mx-auto px-6 text-center text-slate-400">
+            <p class="mb-2">🎬 CineMood - AI 驅動的心情電影推薦</p>
+            <p class="text-sm">Powered by Ollama + Llama3.1 + Sentence Transformers</p>
+        </div>
+    </footer>
+    
+</body>
+</html>

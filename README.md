@@ -197,6 +197,10 @@ Converts movie metadata into embeddings and finds similar movies using cosine si
 ### 3. Hybrid Recommendation
 Combines LLM understanding with vector search for intelligent, contextual recommendations.
 
+## 📚 Documentation
+
+- [UI/UX Design Guide](docs/UI_UX_DESIGN.md) - Complete design system and wireframes
+
 ## 📄 License
 
 MIT License
