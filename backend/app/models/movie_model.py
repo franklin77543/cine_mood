@@ -15,13 +15,13 @@ class Movie(Base):
     # TMDB Data
     tmdb_id = Column(Integer, unique=True, nullable=False, index=True)
     title = Column(String(500), nullable=False)
-    title_original = Column(String(500))
+    original_title = Column(String(500))
     release_date = Column(Date)
     runtime = Column(Integer)
     overview = Column(Text)
     poster_path = Column(String(500))
     backdrop_path = Column(String(500))
-    rating = Column(DECIMAL(3, 1))
+    vote_average = Column(DECIMAL(3, 1))
     vote_count = Column(Integer)
     popularity = Column(DECIMAL(10, 3))
     
