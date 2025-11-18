@@ -10,7 +10,8 @@ class Genre(Base):
     # Primary Key
     id = Column(Integer, primary_key=True, autoincrement=True)
     
-    # Data
+    # TMDB Data
+    tmdb_id = Column(Integer, unique=True, nullable=False)
     name = Column(String(100), unique=True, nullable=False)
     
     # Relationships
