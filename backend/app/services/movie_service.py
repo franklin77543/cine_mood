@@ -3,7 +3,6 @@ Movie Service
 電影相關業務邏輯
 """
 from typing import Optional
-from sqlalchemy.orm import Session
 from fastapi import HTTPException
 import math
 
@@ -15,9 +14,9 @@ from app.schemas.movie_schema import MovieDetail, MovieListItem, MovieListRespon
 class MovieService:
     """電影業務邏輯層"""
     
-    def __init__(self, db: Session):
-        self.movie_repo = MovieRepository(db)
-        self.genre_repo = GenreRepository(db)
+    def __init__(self, movie_repo: MovieRepository, genre_repo: GenreRepository):
+        self.movie_repo = movie_repo
+        self.genre_repo = genre_repo
     
     def get_movie_detail(self, movie_id: str) -> MovieDetail:
         """
