@@ -1,0 +1,158 @@
+// CineMood Database Schema
+// Use DBML to define your database structure
+// Docs: https://dbml.dbdiagram.io/docs
+
+Project CineMood {
+  database_type: 'SQLite'
+  Note: 'AI-powered Movie Recommendation System with NLU'
+}
+
+// 電影主表
+Table movies {
+  id varchar(36) [pk, note: 'UUID primary key']
+  tmdb_id integer [unique, not null, note: 'TMDB API movie ID']
+  title varchar(500) [not null, note: '電影標題 (中文)']
+  title_original varchar(500) [note: '原始標題']
+  release_date date [note: '上映日期']
+  runtime integer [note: '片長 (分鐘)']
+  overview text [note: '劇情簡介']
+  poster_path varchar(500) [note: '海報圖片路徑']
+  backdrop_path varchar(500) [note: '背景圖片路徑']
+  rating decimal(3,1) [note: '評分 (0-10)']
+  vote_count integer [note: '評分人數']
+  popularity decimal(10,3) [note: 'TMDB 熱門度']
+  created_at timestamp [default: `now()`, note: '建立時間']
+  updated_at timestamp [default: `now()`, note: '更新時間']
+  
+  Indexes {
+    tmdb_id
+    rating
+    popularity
+    release_date
+  }
+  
+  Note: '電影基本資訊表，從 TMDB API 獲取'
+}
+
+// 類型表
+Table genres {
+  id integer [pk, increment, note: 'Auto increment ID']
+  name varchar(100) [unique, not null, note: '類型名稱 (動作/喜劇/劇情等)']
+  
+  Note: '電影類型表 (動作、喜劇、劇情、科幻等)'
+}
+
+// 電影-類型關聯表 (多對多)
+Table movie_genres {
+  movie_id varchar(36) [note: '電影ID']
+  genre_id integer [note: '類型ID']
+  
+  Indexes {
+    (movie_id, genre_id) [pk]
+    genre_id
+  }
+  
+  Note: '電影與類型的多對多關聯表'
+}
+
+// 演員/導演表
+Table people {
+  id varchar(36) [pk, note: 'UUID primary key']
+  tmdb_id integer [unique, not null, note: 'TMDB API person ID']
+  name varchar(200) [not null, note: '姓名']
+  profile_path varchar(500) [note: '個人照片路徑']
+  
+  Indexes {
+    tmdb_id
+    name
+  }
+  
+  Note: '演員、導演等演職人員表'
+}
+
+// 電影-演職員關聯表 (多對多)
+Table movie_credits {
+  movie_id varchar(36) [note: '電影ID']
+  person_id varchar(36) [note: '演職員ID']
+  role varchar(50) [not null, note: 'director/actor']
+  character varchar(200) [note: '角色名稱 (僅演員)']
+  order_num integer [note: '排序 (演員順序)']
+  
+  Indexes {
+    (movie_id, person_id, role) [pk]
+    person_id
+    role
+  }
+  
+  Note: '電影與演職員的多對多關聯，區分導演與演員'
+}
+
+// 情緒標籤表
+Table mood_tags {
+  id integer [pk, increment, note: 'Auto increment ID']
+  tag varchar(50) [unique, not null, note: '情緒標籤 (happy/sad/excited等)']
+  description text [note: '標籤描述']
+  
+  Note: '預定義情緒標籤 (開心/悲傷/刺激/放鬆等)'
+}
+
+// 電影-情緒標籤關聯表 (多對多，帶權重)
+Table movie_moods {
+  movie_id varchar(36) [note: '電影ID']
+  mood_id integer [note: '情緒標籤ID']
+  weight decimal(3,2) [note: '關聯權重 (0-1)']
+  
+  Indexes {
+    (movie_id, mood_id) [pk]
+    mood_id
+    weight
+  }
+  
+  Note: '電影與情緒標籤的多對多關聯，weight表示關聯強度'
+}
+
+// 電影向量表 (一對一)
+Table movie_embeddings {
+  movie_id varchar(36) [pk, note: '電影ID (一對一)']
+  embedding text [not null, note: 'Vector(384) - 語義向量']
+  embedding_text text [note: '生成向量的原始文本']
+  created_at timestamp [default: `now()`, note: '建立時間']
+  
+  Note: '電影語義向量表，用於相似度搜尋 (paraphrase-multilingual-MiniLM-L12-v2, 384維)'
+}
+
+// Relationships Documentation
+Ref: movies.id < movie_genres.movie_id [delete: cascade]
+Ref: genres.id < movie_genres.genre_id [delete: cascade]
+
+Ref: movies.id < movie_credits.movie_id [delete: cascade]
+Ref: people.id < movie_credits.person_id [delete: cascade]
+
+Ref: movies.id < movie_moods.movie_id [delete: cascade]
+Ref: mood_tags.id < movie_moods.mood_id [delete: cascade]
+
+Ref: movies.id - movie_embeddings.movie_id [delete: cascade]
+
+// Enums
+Enum credit_role {
+  director [note: '導演']
+  actor [note: '演員']
+}
+
+// Table Groups for better visualization
+TableGroup movie_core {
+  movies
+  movie_embeddings
+}
+
+TableGroup movie_metadata {
+  genres
+  people
+  mood_tags
+}
+
+TableGroup movie_relations {
+  movie_genres
+  movie_credits
+  movie_moods
+}
