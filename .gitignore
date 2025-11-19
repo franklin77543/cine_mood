@@ -84,3 +84,6 @@ chroma_data/
 # *.bin
 # *.safetensors
 # *.gguf
+
+# Secret files
+secret/
